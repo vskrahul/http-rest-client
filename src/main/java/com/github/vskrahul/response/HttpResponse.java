@@ -1,26 +1,38 @@
 package com.github.vskrahul.response;
 
-import com.github.vskrahul.header.HttpHeader;
+import java.util.List;
+import java.util.Map;
 
-public class HttpResponse implements Response {
+public class HttpResponse {
 
 	private String body;
 	
-	private HttpHeader header;
+	private Map<String, List<String>> header;
+	
+	private Integer statusCode;
+	
+	private String status;
+	
+	public HttpResponse(String body, Map<String, List<String>> header, Integer statusCode, String status) {
+		this.body = body;
+		this.header = header;
+		this.statusCode = statusCode;
+		this.status = status;
+	}
 
 	public String getBody() {
 		return body;
 	}
 
-	public void setBody(String body) {
-		this.body = body;
-	}
-
-	public HttpHeader getHeader() {
+	public Map<String, List<String>> getHeader() {
 		return header;
 	}
 
-	public void setHeader(HttpHeader header) {
-		this.header = header;
+	public Integer getStatusCode() {
+		return statusCode;
+	}
+
+	public String getStatus() {
+		return status;
 	}
 }

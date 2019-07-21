@@ -1,8 +1,10 @@
 package com.github.vskrahul.connection;
 
-import com.github.vskrahul.response.Response;
+import java.io.IOException;
+
+import com.github.vskrahul.response.HttpResponse;
 
 public interface Connection {
 
-	Response execute();
+	HttpResponse execute() throws IOException;
 }
