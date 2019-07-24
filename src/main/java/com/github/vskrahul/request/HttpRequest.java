@@ -1,21 +1,39 @@
 package com.github.vskrahul.request;
 
-import com.github.vskrahul.header.HttpHeader;
-import com.github.vskrahul.method.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class HttpRequest implements Request {
+import com.github.vskrahul.method.HttpMethod;
+
+public class HttpRequest {
 
 	private String body;
 	
+	private List<Parameter> param;
+	
+	private List<QueryParameter> queryParam;
+	
 	private HttpHeader header;
 	
-	private Method method;
+	private HttpMethod method;
 	
-	public HttpRequest(Method method) {
+	private String url;
+	
+	private boolean trace;
+	
+	public HttpRequest(HttpMethod method, String url) {
 		this.method = method;
+		this.url = url;
+		this.header = new HttpHeader();
+		this.param = new ArrayList<>();
+		this.queryParam = new ArrayList<>();
 	}
 
 	public String getBody() {
+		body = param.stream()
+				.map(Parameter::toString)
+				.collect(Collectors.joining("&"));
 		return body;
 	}
 
@@ -27,16 +45,29 @@ public class HttpRequest implements Request {
 		return header;
 	}
 
-	public void setHeader(HttpHeader header) {
-		this.header = header;
-	}
-
-	public Method getMethod() {
+	public HttpMethod getMethod() {
 		return method;
 	}
-
-	public void setMethod(Method method) {
-		this.method = method;
+	
+	public void param(String key, String value) {
+		param.add(new Parameter(key, value));
 	}
 	
+	public void queryParam(String key, String value) {
+		queryParam.add(new QueryParameter(key, value));
+	}
+	
+	public boolean traceFlag() {
+		return trace;
+	}
+	
+	public void trace() {
+		trace = true;
+	}
+	
+	public String url() {
+		if(!queryParam.isEmpty())
+			this.url = this.url + queryParam.stream().map(QueryParameter::toString).collect(Collectors.joining("&", "?", ""));
+		return this.url;
+	}
 }

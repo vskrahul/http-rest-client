@@ -19,20 +19,25 @@ public class HttpResponse {
 		this.statusCode = statusCode;
 		this.status = status;
 	}
-
-	public String getBody() {
+	
+	@Override
+	public String toString() {
+		return String.format("response=%s, statusCode=%d", body, statusCode);
+	}
+	
+	public String get() {
 		return body;
 	}
 
-	public Map<String, List<String>> getHeader() {
+	public Map<String, List<String>> header() {
 		return header;
 	}
 
-	public Integer getStatusCode() {
+	public Integer statusCode() {
 		return statusCode;
 	}
 
-	public String getStatus() {
+	public String status() {
 		return status;
 	}
 }

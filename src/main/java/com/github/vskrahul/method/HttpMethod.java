@@ -1,6 +1,6 @@
 package com.github.vskrahul.method;
 
-public enum Method {
+public enum HttpMethod {
 
 	GET("GET"),
 	POST("POST"),
@@ -20,7 +20,7 @@ public enum Method {
 	
 	private String value;
 	
-	private Method(String value) {
+	private HttpMethod(String value) {
 		this.value = value;
 	}
 	

@@ -1,4 +1,4 @@
-package com.github.vskrahul.header;
+package com.github.vskrahul.request;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,5 +17,9 @@ public class HttpHeader {
 	
 	public void add(Map<String, String> values) {
 		this.values.putAll(values);
+	}
+	
+	public Map<String, String> get() {
+		return values;
 	}
 }

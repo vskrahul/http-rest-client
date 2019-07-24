@@ -5,66 +5,35 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
+import java.nio.charset.Charset;
 
-import com.github.vskrahul.method.Method;
+import com.github.vskrahul.method.HttpMethod;
 import com.github.vskrahul.request.HttpRequest;
 import com.github.vskrahul.response.HttpResponse;
 
-public class HttpConnection implements Connection {
+public class HttpConnection {
 
 	private HttpURLConnection connection;
-	
-	private HttpRequest request;
 	
 	public HttpConnection() {
 		
 	}
 	
-	public HttpConnection get(String url) throws IOException {
-		this.request = new HttpRequest(Method.GET);
-		openConnection(url);
-		return this;
-	}
-	
-	public HttpConnection post(String url) throws IOException {
-		this.request = new HttpRequest(Method.POST);
-		openConnection(url);
-		return this;
-	}
-	
-	public HttpConnection header(String key, String value) {
-		this.connection.addRequestProperty(key, value);
-		return this;
-	}
-	
-	public HttpConnection header(Map<String, String> headers) {
-		headers.entrySet().stream().forEach(e -> this.connection.addRequestProperty(e.getKey(), e.getValue()));
-		return this;
-	}
-	
-	public HttpConnection body(String body) throws IOException {
-		this.request.setBody(body);
+	public HttpResponse execute(HttpRequest request) throws IOException {
 		
-		this.connection.setDoOutput(true);
-		OutputStream os = null;
+		HttpResponse response = null;
 		try {
-			os = this.connection.getOutputStream();
-			os.write(body.getBytes());
-			os.flush();
-		} catch(IOException e) {
-			throw e;
-		} finally {
-			try {if(os!=null) os.close();} catch(IOException e) {}
-		}
-		
-		return this;
-	}
-	
-	@Override
-	public HttpResponse execute() throws IOException {
-		
-		try {
+			openConnection(request.url());
+			
+			request.getHeader().get()
+								.entrySet()
+								.stream()
+								.forEach(e -> {
+									this.connection.addRequestProperty(e.getKey(), e.getValue());
+								});
+			
+			if(request.getMethod() != HttpMethod.GET) body(request.getBody(), request);
+			
 			this.connection.connect();
 			
 			StringBuilder sb = new StringBuilder();
@@ -80,28 +49,52 @@ public class HttpConnection implements Connection {
 			
 			
 			String body = body(this.connection.getInputStream());
-			sb.append("\nbody=").append(body);
+			sb.append("\nresponse=").append(body);
 			
-			System.out.println(sb.toString());
+			if(request.traceFlag())
+				System.out.println(sb.toString());
 			
-			return new HttpResponse(body
+			response = new HttpResponse(body
 							,this.connection.getHeaderFields()
 							,this.connection.getResponseCode()
 							,this.connection.getResponseMessage());
-			
+			return response;
 		} catch(IOException e) {
-			throw e;
+			String errorBody = body(this.connection.getErrorStream());
+			response = new HttpResponse(errorBody
+					,this.connection.getHeaderFields()
+					,this.connection.getResponseCode()
+					,this.connection.getResponseMessage());
 		} finally {
 			this.connection.disconnect();
 		}
+		return response;
+	}
+	
+	private void body(String body, HttpRequest request) throws IOException {
+		
+		this.connection.setDoOutput(true);
+		OutputStream os = null;
+		try {
+			os = this.connection.getOutputStream();
+			os.write(body.getBytes(Charset.forName("UTF-8")));
+			os.flush();
+		} catch(IOException e) {
+			throw e;
+		} finally {
+			try {if(os!=null) os.close();} catch(IOException e) {}
+		}
+		
 	}
 	
 	private String body(InputStream is) throws IOException {
 		StringBuilder sb = new StringBuilder(); 
 		try {
 			byte[] data = new byte[1024];
-			is.read(data);
-			sb.append(new String(data));
+			int i = -1;
+			while((i = is.read(data)) > 0) {
+				sb.append(new String(data, 0, i, Charset.forName("UTF-8")));
+			}
 		} catch(IOException e) {
 			System.err.println(e.getMessage());
 			throw e;
@@ -109,7 +102,7 @@ public class HttpConnection implements Connection {
 		return sb.toString();
 	}
 	
-	private Connection openConnection(String url) throws IOException {
+	private HttpConnection openConnection(String url) throws IOException {
 		try {
 			URL _url = new URL(url);
 			this.connection = (HttpURLConnection)_url.openConnection();
