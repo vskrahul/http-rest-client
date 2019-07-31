@@ -7,8 +7,13 @@
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
 	<name>http-rest-client</name>
-	
+
 	<dependencies>
 
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.4</version>
+		</dependency>
 	</dependencies>
 </project>

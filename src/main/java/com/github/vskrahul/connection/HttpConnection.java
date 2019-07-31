@@ -22,6 +22,7 @@ public class HttpConnection {
 	public HttpResponse execute(HttpRequest request) throws IOException {
 		
 		HttpResponse response = null;
+		StringBuilder sb = new StringBuilder();
 		try {
 			openConnection(request.url());
 			
@@ -36,12 +37,10 @@ public class HttpConnection {
 			
 			this.connection.connect();
 			
-			StringBuilder sb = new StringBuilder();
-			
 			sb.append("Content-Encoding=").append(this.connection.getContentEncoding());
 			sb.append("\nContent-Length=").append(this.connection.getContentLength());
 			sb.append("\nContent-Type=").append(this.connection.getContentType());
-			sb.append("\nContent=").append(this.connection.getContent());
+			//sb.append("\nContent=").append(this.connection.getContent());
 			sb.append("\nResponseMessage=").append(this.connection.getResponseMessage());
 			sb.append("\nResponseCode=").append(this.connection.getResponseCode());
 			sb.append("\nHeader=").append(this.connection.getHeaderFields());
@@ -51,9 +50,6 @@ public class HttpConnection {
 			String body = body(this.connection.getInputStream());
 			sb.append("\nresponse=").append(body);
 			
-			if(request.traceFlag())
-				System.out.println(sb.toString());
-			
 			response = new HttpResponse(body
 							,this.connection.getHeaderFields()
 							,this.connection.getResponseCode()
@@ -61,12 +57,15 @@ public class HttpConnection {
 			return response;
 		} catch(IOException e) {
 			String errorBody = body(this.connection.getErrorStream());
+			sb.append("\nresponse=").append(errorBody);
 			response = new HttpResponse(errorBody
 					,this.connection.getHeaderFields()
 					,this.connection.getResponseCode()
 					,this.connection.getResponseMessage());
 		} finally {
 			this.connection.disconnect();
+			if(request.traceFlag())
+				System.out.println(sb.toString());
 		}
 		return response;
 	}

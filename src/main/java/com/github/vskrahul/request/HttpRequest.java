@@ -57,6 +57,14 @@ public class HttpRequest {
 		queryParam.add(new QueryParameter(key, value));
 	}
 	
+	public List<Parameter> getParam() {
+		return param;
+	}
+
+	public List<QueryParameter> getQueryParam() {
+		return queryParam;
+	}
+
 	public boolean traceFlag() {
 		return trace;
 	}
