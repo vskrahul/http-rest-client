@@ -2,6 +2,8 @@ package com.github.vskrahul.security.oauth1;
 
 public interface OauthConstants {
 	
+	String HMAC_SHA1_ALGORITHM = "HmacSHA1";
+	
 	String AUTHORIZATION = "Authorization";
 	
 	String OAUTH = "OAuth";

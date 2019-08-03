@@ -1,16 +1,16 @@
 package com.github.vskrahul.client;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Map;
 
 import com.github.vskrahul.connection.HttpConnection;
+import com.github.vskrahul.header.HttpHeaderConstants;
 import com.github.vskrahul.method.HttpMethod;
 import com.github.vskrahul.request.HttpRequest;
 import com.github.vskrahul.response.HttpResponse;
+import com.github.vskrahul.security.basic.BasicAuthentication;
 import com.github.vskrahul.security.oauth1.Oauth1;
 import com.github.vskrahul.security.oauth1.OauthConstants;
-import com.github.vskrahul.util.IOUtil;
 
 public class HttpClient {
 
@@ -32,6 +32,37 @@ public class HttpClient {
 		return this;
 	}
 	
+	/**
+	 * Parse the HTTP URL and grab {@code userinfo} or {@code queryParams} if available.
+	 * 
+	 * <p>
+	 * Generalized URI format
+	 * 
+	 * scheme://authority/path[?queryParams][#fragment]
+	 * 
+	 * <ul
+	 * 	<li>scheme = sequence of characters beginning with a letter and followed by any combination of letters, digits, plus ("+"), period ("."), or hyphen ("-")
+	 * 	<li>authority = [ userinfo "@" ] host [ ":" port ]
+	 * 	<li>
+	 * </ul>
+	 * 
+	 * 
+	 * 
+	 * @param url
+	 */
+	public void parseUrl(String url) {
+		
+	}
+	
+	/**
+	 * Prepare and add {@code Authorization} in the request
+	 * 
+	 * <p>
+	 * <b>Prerequisite:-</b> Adding any header, query, form or urlencoded data will be ignore after this call.
+	 * 
+	 * @param oauth {@link OAuth1}
+	 * @return {@link HttpClient}
+	 */
 	public HttpClient oauth1(Oauth1 oauth) {
 		try {
 			header(OauthConstants.AUTHORIZATION, oauth.authorization(this.request));
@@ -67,16 +98,8 @@ public class HttpClient {
 	}
 	
 	public HttpClient basicAuth(String username, char[] password) {
-		
-		byte[] pass = IOUtil.toBytes(IOUtil.combine(username.toCharArray(), password, ':'));
-		
-		String value = Base64.getEncoder().encodeToString(pass);
-		
-		this.header("Authorization", "Basic " + value);
-		
-		IOUtil.wipe(pass);
-		IOUtil.wipe(password);
-		
+		this.header(HttpHeaderConstants.AUTHORIZATION
+									,BasicAuthentication.basicAuthentication(username, password));
 		return this;
 	}
 	

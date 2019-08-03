@@ -4,10 +4,12 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class IOUtil {
 
 	public static byte[] toBytes(char[] chars) {
+	  Objects.requireNonNull(chars);
 	  CharBuffer charBuffer = CharBuffer.wrap(chars);
 	  ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
 	  byte[] bytes = Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit());
@@ -15,6 +17,14 @@ public class IOUtil {
 	  return bytes;
 	}
 	
+	/**
+	 * Concatenate two char arrays with give delimiter as a middle char.
+	 * 
+	 * @param arr1 first array
+	 * @param arr2 second array
+	 * @param c delimiter
+	 * @return combined array of characters
+	 */
 	public static char[] combine(char[] arr1, char[] arr2, char c) {
 		
 		char[] result = new char[arr1.length + arr2.length + 1];
