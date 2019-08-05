@@ -40,15 +40,13 @@ public class HttpClient {
 	 * 
 	 * scheme://authority/path[?queryParams][#fragment]
 	 * 
-	 * <ul
+	 * <ul>
 	 * 	<li>scheme = sequence of characters beginning with a letter and followed by any combination of letters, digits, plus ("+"), period ("."), or hyphen ("-")
 	 * 	<li>authority = [ userinfo "@" ] host [ ":" port ]
 	 * 	<li>
 	 * </ul>
 	 * 
-	 * 
-	 * 
-	 * @param url
+	 * @param url http endpoint
 	 */
 	public void parseUrl(String url) {
 		
@@ -60,7 +58,7 @@ public class HttpClient {
 	 * <p>
 	 * <b>Prerequisite:-</b> Adding any header, query, form or urlencoded data will be ignore after this call.
 	 * 
-	 * @param oauth {@link OAuth1}
+	 * @param oauth {@link Oauth1}
 	 * @return {@link HttpClient}
 	 */
 	public HttpClient oauth1(Oauth1 oauth) {
