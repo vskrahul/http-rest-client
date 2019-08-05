@@ -17,7 +17,7 @@ import com.github.vskrahul.security.oauth1.OauthConstants;
  */
 public class HttpClientApp {
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String args[]) {
 		
 		/*HttpClientBuilder.builder()
 							.post("https://api.twitter.com/oauth/request_token")
