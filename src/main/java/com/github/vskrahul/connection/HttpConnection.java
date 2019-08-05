@@ -7,9 +7,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+import com.github.vskrahul.exception.HttpException;
 import com.github.vskrahul.method.HttpMethod;
 import com.github.vskrahul.request.HttpRequest;
 import com.github.vskrahul.response.HttpResponse;
+import com.github.vskrahul.status.HttpStatus;
 
 public class HttpConnection {
 
@@ -19,7 +21,7 @@ public class HttpConnection {
 		
 	}
 	
-	public HttpResponse execute(HttpRequest request) throws IOException {
+	public HttpResponse execute(HttpRequest request) {
 		
 		HttpResponse response = null;
 		StringBuilder sb = new StringBuilder();
@@ -56,12 +58,18 @@ public class HttpConnection {
 							,this.connection.getResponseMessage());
 			return response;
 		} catch(IOException e) {
-			String errorBody = body(this.connection.getErrorStream());
-			sb.append("\nresponse=").append(errorBody);
-			response = new HttpResponse(errorBody
-					,this.connection.getHeaderFields()
-					,this.connection.getResponseCode()
-					,this.connection.getResponseMessage());
+			try {
+				String errorBody = body(this.connection.getErrorStream());
+				sb.append("\nresponse=").append(errorBody);
+				response = new HttpResponse(errorBody
+						,this.connection.getHeaderFields()
+						,this.connection.getResponseCode()
+						,this.connection.getResponseMessage());
+			} catch(IOException ex) {
+				sb.append("\nresponse=").append(e.getMessage());
+				response = new HttpResponse(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR.statusCode()
+																	,HttpStatus.INTERNAL_SERVER_ERROR.status());
+			}
 		} finally {
 			this.connection.disconnect();
 			if(request.traceFlag())
@@ -86,7 +94,7 @@ public class HttpConnection {
 		
 	}
 	
-	private String body(InputStream is) throws IOException {
+	private String body(InputStream is) {
 		StringBuilder sb = new StringBuilder(); 
 		try {
 			byte[] data = new byte[1024];
@@ -96,7 +104,7 @@ public class HttpConnection {
 			}
 		} catch(IOException e) {
 			System.err.println(e.getMessage());
-			throw e;
+			throw new HttpException(e.getMessage());
 		}
 		return sb.toString();
 	}

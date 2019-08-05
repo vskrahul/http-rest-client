@@ -22,12 +22,12 @@ public class HttpClient {
 		this.connection = new HttpConnection();
 	}
 	
-	public HttpClient get(String url) throws IOException {
+	public HttpClient get(String url) {
 		this.request = new HttpRequest(HttpMethod.GET, url);
 		return this;
 	}
 	
-	public HttpClient post(String url) throws IOException {
+	public HttpClient post(String url) {
 		this.request = new HttpRequest(HttpMethod.POST, url);
 		return this;
 	}
@@ -108,7 +108,7 @@ public class HttpClient {
 		return this;
 	}
 	
-	public HttpResponse execute() throws IOException {
+	public HttpResponse execute() {
 		return this.connection.execute(this.request);
 	}
 }

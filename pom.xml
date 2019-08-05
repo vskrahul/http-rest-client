@@ -6,17 +6,17 @@
 	<artifactId>http-rest-client</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
-	<name>http-rest-client</name>
-	
+
+	<name>${project.groupId}:${project.artifactId}</name>
 	<description>HTTP REST Client</description>
 	<url>https://github.com/vskrahul/http-rest-client</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
-    	<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
-	
+
 	<developers>
 		<developer>
 			<id>vsk.rahul</id>
@@ -26,7 +26,7 @@
 			<organizationUrl>https://github.com/vskrahul</organizationUrl>
 		</developer>
 	</developers>
-	
+
 	<licenses>
 		<license>
 			<name>MIT License</name>
@@ -35,11 +35,11 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git://github.com/vskrahul/properties-parser.git</connection>
+		<connection>scm:git:git://github.com/vskrahul/http-rest-client.git</connection>
 		<developerConnection>scm:git:ssh://github.com/vskrahul/http-rest-client.git</developerConnection>
 		<url>https://github.com/vskrahul/http-rest-client</url>
 	</scm>
-	
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -50,7 +50,7 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
-	
+
 	<profiles>
 		<profile>
 			<id>release</id>
@@ -123,7 +123,7 @@
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.7</version>
+						<version>1.6.8</version>
 						<extensions>true</extensions>
 						<configuration>
 							<serverId>ossrh</serverId>
@@ -175,6 +175,6 @@
 			<version>1.7.4</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
 </project>
