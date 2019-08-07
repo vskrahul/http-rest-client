@@ -23,6 +23,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.github.vskrahul.exception.OauthException;
@@ -153,12 +154,6 @@ public class Oauth1 {
 		} catch(MalformedURLException | URISyntaxException e) {
 			throw new OauthException(e.getMessage());
 		}
-
-		if (url.getQuery() != null)
-			for (String q : url.getQuery().split("&")) {
-				String[] query = q.split("=");
-				request.queryParam(query[0], query[1]);
-			}
 		
 		return percentEncode(request.getMethod().name().toUpperCase()) 
 							+ "&" 
@@ -195,22 +190,22 @@ public class Oauth1 {
 		keyVal.addAll(kv1);
 		keyVal.addAll(kv2);
 		
-		if(!ObjectUtil.isStringEmpty.test(this.consumerKey))
+		if(ObjectUtil.nonEmptyString.test(this.consumerKey))
 			keyVal.add(new Oauth1.KeyValue(percentEncode(OAUTH_CONSUMER_KEY), percentEncode(this.consumerKey)));
 		
-		if(!ObjectUtil.isStringEmpty.test(this.token))
+		if(ObjectUtil.nonEmptyString.test(this.token))
 			keyVal.add(new Oauth1.KeyValue(percentEncode(OAUTH_TOKEN), percentEncode(this.token)));
 			
-		if(!ObjectUtil.isStringEmpty.test(this.signatureMethod))	
+		if(ObjectUtil.nonEmptyString.test(this.signatureMethod))	
 			keyVal.add(new Oauth1.KeyValue(percentEncode(OAUTH_SIGNATURE_METHOD), percentEncode(this.signatureMethod)));
 		
-		if(!ObjectUtil.isStringEmpty.test(this.nonce))
+		if(ObjectUtil.nonEmptyString.test(this.nonce))
 			keyVal.add(new Oauth1.KeyValue(percentEncode(OAUTH_NONCE), percentEncode(this.nonce)));
 		
-		if(!ObjectUtil.isStringEmpty.test(this.timestamp))
+		if(ObjectUtil.nonEmptyString.test(this.timestamp))
 			keyVal.add(new Oauth1.KeyValue(percentEncode(OAUTH_TIMESTAMP), percentEncode(this.timestamp)));
 		
-		if(!ObjectUtil.isStringEmpty.test(v1_0))
+		if(ObjectUtil.nonEmptyString.test(v1_0))
 			keyVal.add(new Oauth1.KeyValue(percentEncode(OAUTH_VERSION), percentEncode(v1_0)));
 
 		Collections.sort(keyVal);
@@ -313,17 +308,14 @@ public class Oauth1 {
 	private String signingKey() {
 		String signaturKey = "";
 		
-		if(!ObjectUtil.isStringEmpty.test(this.consumerSecret))
+		if(ObjectUtil.nonEmptyString.test(this.consumerSecret))
 			signaturKey += percentEncode(this.consumerSecret);
-		else
-			signaturKey += "";
 		
 		signaturKey += "&";
 		
-		if(!ObjectUtil.isStringEmpty.test(this.tokenSecret))
+		if(ObjectUtil.nonEmptyString.test(this.tokenSecret))
 			signaturKey += percentEncode(this.tokenSecret);
-		else
-			signaturKey += "";
+
 		return signaturKey;
 	}
 	
@@ -332,29 +324,24 @@ public class Oauth1 {
 		
 		authorization.append(OAUTH).append(" ");
 		
-		if(!ObjectUtil.isStringEmpty.test(this.realm))
+		if(ObjectUtil.nonEmptyString.test(this.realm))
 			authorization.append(REALM).append("=").append(this.realm).append(",");
 		
-		if(!ObjectUtil.isStringEmpty.test(this.consumerKey))
-			authorization.append(OAUTH_CONSUMER_KEY).append("=").append(this.consumerKey).append(",");
+		Objects.requireNonNull(this.consumerKey);
+		Objects.requireNonNull(this.timestamp);
+		Objects.requireNonNull(this.nonce);
+		Objects.requireNonNull(this.signature);
 		
-		if(!ObjectUtil.isStringEmpty.test(this.token))
+		authorization.append(OAUTH_CONSUMER_KEY).append("=").append(this.consumerKey).append(",");
+		
+		if(ObjectUtil.nonEmptyString.test(this.token))
 			authorization.append(OAUTH_TOKEN).append("=").append(this.token).append(",");
 		
-		if(!ObjectUtil.isStringEmpty.test(this.consumerKey))
-			authorization.append(OAUTH_SIGNATURE_METHOD).append("=").append(HMAC_SHA1).append(",");
-		
-		if(!ObjectUtil.isStringEmpty.test(this.consumerKey))
-			authorization.append(OAUTH_TIMESTAMP).append("=").append(this.timestamp).append(",");
-		
-		if(!ObjectUtil.isStringEmpty.test(this.consumerKey))
-			authorization.append(OAUTH_NONCE).append("=").append(this.nonce).append(",");
-		
-		if(!ObjectUtil.isStringEmpty.test(this.consumerKey))
-			authorization.append(OAUTH_VERSION).append("=").append(v1_0).append(",");
-		
-		if(!ObjectUtil.isStringEmpty.test(this.signature))
-			authorization.append(OAUTH_SIGNATURE).append("=").append(this.signature).append(",");
+		authorization.append(OAUTH_SIGNATURE_METHOD).append("=").append(HMAC_SHA1).append(",");
+		authorization.append(OAUTH_TIMESTAMP).append("=").append(this.timestamp).append(",");
+		authorization.append(OAUTH_NONCE).append("=").append(this.nonce).append(",");
+		authorization.append(OAUTH_VERSION).append("=").append(v1_0).append(",");
+		authorization.append(OAUTH_SIGNATURE).append("=").append(this.signature);
 		
 		return authorization;
 	}

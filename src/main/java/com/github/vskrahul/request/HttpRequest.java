@@ -74,8 +74,6 @@ public class HttpRequest {
 	}
 	
 	public String url() {
-		if(!queryParam.isEmpty())
-			this.url = this.url + queryParam.stream().map(QueryParameter::toString).collect(Collectors.joining("&", "?", ""));
 		return this.url;
 	}
 }

@@ -8,9 +8,9 @@ public class ObjectUtilTest {
 
 	@Test
 	public void testIsStringEmpty() {
-		assertFalse(ObjectUtil.isStringEmpty.test("NOT_EMPTY"));
-		assertTrue(ObjectUtil.isStringEmpty.test("   "));
-		assertTrue(ObjectUtil.isStringEmpty.test(""));
-		assertTrue(ObjectUtil.isStringEmpty.test(null));
+		assertTrue(ObjectUtil.nonEmptyString.test("NOT_EMPTY"));
+		assertFalse(ObjectUtil.nonEmptyString.test("   "));
+		assertFalse(ObjectUtil.nonEmptyString.test(""));
+		assertFalse(ObjectUtil.nonEmptyString.test(null));
 	}
 }
