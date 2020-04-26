@@ -15,17 +15,17 @@ Project contains `TwitterApplication.java' to call Twitter API which secured wit
 ```java
 
 HttpResponse response = HttpClientBuilder.builder()
-									  .get("URL")
-									  .queryParam(key, value)
-					                  .basicAuth(username, passwordCharArray) // if secured with basic authentication
-					                  .oauth1(Oauth1.build()
-													.consumerKey(consumerKey)
-													.consumerSecret(consumerSecret)
-					                                .token(accessToken)
-					                                .tokenSecret(accessTokenSecret)
-													.signatureMethod(OauthConstants.HMAC_SHA1)) //if secured with OAuth 1.0
-										.trace() //if you want to log complete HTTP Response
-										.execute();
+				.get("URL")
+				.queryParam(key, value)
+				.basicAuth(username, passwordCharArray) // if secured with basic authentication
+				.oauth1(Oauth1.build()
+					.consumerKey(consumerKey)
+					.consumerSecret(consumerSecret)
+					.token(accessToken)
+					.tokenSecret(accessTokenSecret)
+					.signatureMethod(OauthConstants.HMAC_SHA1)) //if secured with OAuth 1.0
+				.trace() //if you want to log complete HTTP Response
+				.execute();
 
 
 ```
@@ -35,18 +35,18 @@ HttpResponse response = HttpClientBuilder.builder()
 ```java
 
 HttpResponse response = HttpClientBuilder.builder()
-								  .post("URL")
-								  .queryParam(key, value)
-				                  .param(key, value)
-				                  .body(body)
-				                  .basicAuth(username, passwordCharArray) // if secured with basic authentication
-				                  .oauth1(Oauth1.build()
-												.consumerKey(consumerKey)
-												.consumerSecret(consumerSecret)
-				                                .token(accessToken)
-				                                .tokenSecret(accessTokenSecret)
-												.signatureMethod(OauthConstants.HMAC_SHA1)) //if secured with OAuth 1.0
-									.trace() //if you want to log complete HTTP Response
-									.execute();
+				.post("URL")
+				.queryParam(key, value)
+				.param(key, value)
+				.body(body)
+				.basicAuth(username, passwordCharArray) // if secured with basic authentication
+				.oauth1(Oauth1.build()
+					.consumerKey(consumerKey)
+					.consumerSecret(consumerSecret)
+					.token(accessToken)
+					.tokenSecret(accessTokenSecret)
+					.signatureMethod(OauthConstants.HMAC_SHA1)) //if secured with OAuth 1.0
+				.trace() //if you want to log complete HTTP Response
+				.execute();
                   
 ```
